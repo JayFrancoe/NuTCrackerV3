@@ -136,6 +136,8 @@ void EXTRACTTEXTURES(PATHINFO *Path)
             WRITEU8(c, hDDS);
         }
 
+        CLOSE(hDDS);
+
         printf("%3u: %s\n", i, TEXTURENAME);
     }
     DESTROYTEXTURESET(&TXST);
