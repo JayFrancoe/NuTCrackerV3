@@ -84,7 +84,10 @@ void EXTRACTTEXTURES(PATHINFO *Path)
         sprintf(TEXTUREPATH, "%s/%s", OUTPATH, TEXTURENAME);
 
         READ4CC("DDS ", hTXST);
-        //printf("%#08x\n", ftell(hTXST));
+
+#ifdef _DEBUG
+        printf("%#08x\n", ftell(hTXST));
+#endif // DEBUG
 
         IMAGE_DDS Image = { 0 };
         int ret = ReadDDSFile(hTXST, &Image);
