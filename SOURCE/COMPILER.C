@@ -1,6 +1,7 @@
 #include "INCLUDE/FILEIO.H"
-
 #include "INCLUDE/NXG_TEXTURES.H"
+
+extern int __cdecl strcmp(char const *_Str1, char const *_Str2);
 
 static
 SIZE FILE_COPY(const char *FILE1, const char *FILE2, MODE ATTRIBUTES)
@@ -70,14 +71,15 @@ void COMPILETEXTURES(PATHINFO *Path, const char *HDRPATH)
         if (cur->Path == NULL)
             continue;
 
-        PATHINFO tmp;
+        PATHINFO tmp = {0,0,0,0};
         GET_PATHINFO(&tmp, cur->Path);
 
-        char folder[260];
+        char folder[260] = {0};
         GET_FOLDER(tmp.FilePath, folder);
 
         char FILENAME[260];
-        if (cur->nuttype == 0x0400)
+        if (cur->nuttype == 0x0400
+        || !strcmp(tmp.FilePath, "Lightmap"))
         {
             sprintf(FILENAME, "lightmaps/lightmap%u.dds", nlightmaps++);
         }

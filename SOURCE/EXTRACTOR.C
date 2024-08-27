@@ -101,6 +101,8 @@ void EXTRACTTEXTURES(PATHINFO *Path)
         // If DDS Header could not be read
         // Read byte by byte
 
+        printf("NON-STANDARD HEADER FOUND (0x%08x) READING BYTE BY BYTE...\n", Image.HEADER.ddspf.dwFourCC);
+
         FILE *hDDS = OPEN_WRITE(TEXTUREPATH, F_BINARY);
 
         fwrite("DDS ", 4, 1, hDDS);
@@ -112,28 +114,34 @@ void EXTRACTTEXTURES(PATHINFO *Path)
             fwrite(&Image.HEADER_DXT10, 0x14, 1, hDDS);
         }
 
+        register 
+            char next = 0, next1 = 0, next2 = 0;
+
         while (0 == IS_EOF(hTXST))
         {
-            char c = READU8(hTXST);
-            if (c == 'D')
+            next = READU8(hTXST);
+            if (next == 'D')
             {
-                c = READU8(hTXST);
-                if (c == 'D')
+                next1 = READU8(hTXST);
+                if (next1 == 'D')
                 {
-                    c = READU8(hTXST);
-                    if (c == 'S')
+                    char next2 = READU8(hTXST);
+                    if (next2 == 'S')
                     {
                         int pos = GET_POSITION(hTXST);
                         SET_POSITION(pos - 3, hTXST);
                         break;
                     }
-                    WRITEU8(c, hDDS);
+                    WRITEU8(next, hDDS);
+                    WRITEU8(next1, hDDS);
+                    WRITEU8(next2, hDDS);
                     continue;
                 }
-                WRITEU8(c, hDDS);
+                WRITEU8(next, hDDS);
+                WRITEU8(next1, hDDS);
                 continue;
             }
-            WRITEU8(c, hDDS);
+            WRITEU8(next, hDDS);
         }
 
         CLOSE(hDDS);

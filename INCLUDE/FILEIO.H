@@ -24,12 +24,6 @@
 
 #endif
 
-struct FILEHANDLE_s
-{
-    FILE *fh;
-
-};
-
 typedef size_t   SIZE;
 typedef SIZE     MODE;
 typedef uint64_t U64;
@@ -82,6 +76,8 @@ switch (sizeof(r)) \
     case 8:  \
         r = _byteswap_uint64(r); \
     break;\
+case 1: \
+    break; \
 }
 
 #define DEFINE_READER(TYPE) \
