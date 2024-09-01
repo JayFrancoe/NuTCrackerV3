@@ -137,7 +137,7 @@ void CLOSE(FILE *FILEHANDLE)
     fclose(FILEHANDLE);
 }
 
-char *READSTRING(U64 Size, FILE *fh)
+char *READSTRING(SIZE Size, FILE *fh)
 {
     switch (Size)
     {

@@ -19,6 +19,9 @@ void EXTRACTTEXTURES(PATHINFO *Path)
 
     FILE *hTXST = OPEN_READ(Path->FilePath, F_BINARY);
 
+    SIZE filesize = GET_SIZE(hTXST);
+
+
     CREATE_DIRECTORY(OUTPATH);
 
     // HEADER
@@ -48,8 +51,16 @@ void EXTRACTTEXTURES(PATHINFO *Path)
     {
         NuTextureHeader *cur = &TXST.FileHeaders[i];
 
-        if (cur->Path == NULL)
+        if ('\0' == cur->Path[0])
             continue;
+
+        SIZE POSITION = GET_POSITION(hTXST);
+
+        if (POSITION >= filesize)
+        {
+            printf("[!! END OF FILE REACHED !!]\n");
+            break;
+        }
 
         PATHINFO pi = { 0,0,0,0 };
         GET_PATHINFO(&pi, cur->Path);
@@ -83,11 +94,12 @@ void EXTRACTTEXTURES(PATHINFO *Path)
         char TEXTUREPATH[260];
         sprintf(TEXTUREPATH, "%s/%s", OUTPATH, TEXTURENAME);
 
-        READ4CC("DDS ", hTXST);
 
 #ifdef _DEBUG
-        printf("%#08x\n", ftell(hTXST));
+        printf("%#08x\n", POSITION);
 #endif // DEBUG
+
+        READ4CC("DDS ", hTXST);
 
         IMAGE_DDS Image = { 0 };
         int ret = ReadDDSFile(hTXST, &Image);
@@ -95,6 +107,7 @@ void EXTRACTTEXTURES(PATHINFO *Path)
         {
             WriteDDS(&Image, TEXTUREPATH);
             printf("%3u: %s\n", i, TEXTURENAME);
+
             continue;
         }
 

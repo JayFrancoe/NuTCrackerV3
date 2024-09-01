@@ -68,7 +68,7 @@ void COMPILETEXTURES(PATHINFO *Path, const char *HDRPATH)
     {
         NuTextureHeader *cur = &TXST.FileHeaders[i];
 
-        if (cur->Path == NULL)
+        if ('\0' == *cur->Path)
             continue;
 
         PATHINFO tmp = {0,0,0,0};
